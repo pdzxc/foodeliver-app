@@ -1,0 +1,54 @@
+
+
+.ui.inverted.segment:after {
+  background-image: url('../images/hero.jfif');
+  background-size: cover;
+  background-position: center;
+  content: "";
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.ui.inverted.segment {
+  background-color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 50px;
+}
+
+.masthead h1.ui.header {
+  margin-top: 2.5em;
+  margin-bottom: 0em;
+  font-size: 4em;
+  font-weight: normal;
+}
+
+.masthead.segment {
+  min-height: 600px;
+  padding: 1em 0em;
+}
+
+.ui.image.logo {
+  max-width: 220px;
+}
+@media only screen and (max-width: 767px) {
+  .ui.image.logo {
+    max-width: 80%;
+    margin: 0 auto 50px;
+  }
+  .ui.stackable.menu>.right.item {
+    margin: auto !important;
+    display: inline-block;
+    width: auto;
+  }
+  .masthead.segment {
+    min-height: 350px;
+  }
+  .masthead h1.ui.header {
+    font-size: 2em;
+    margin-top: 1.5em;
+  }
+}

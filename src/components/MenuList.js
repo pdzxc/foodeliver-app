@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
 const MenuList = (props) => {
   useEffect(() => {
     props.fetchMenus();
-  }, []);
+  }, [props]);
 
   const onAddToCart = (menu) => {
     props.addToCart(menu);
@@ -37,7 +37,9 @@ const MenuList = (props) => {
           <div className="extra content">
             <div className="right floated">
               <div className="ui left labeled button">
-                <a className="ui basic label">&#8369; {menu.price}</a>
+                <a href="#/" className="ui basic label">
+                  &#8369; {menu.price}
+                </a>
                 <div
                   className="ui icon button olive"
                   onClick={() => onAddToCart(menu)}

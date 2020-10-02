@@ -12,7 +12,7 @@ const Checkout = (props) => {
     if (_.isEmpty(props.orders)) {
       history.push('/');
     }
-  }, []);
+  }, [props.orders]);
   const totalAmount = () => {
     const total = _.sumBy(props.orders, (o) => {
       return o.quantity * o.price;
@@ -40,7 +40,7 @@ const Checkout = (props) => {
     return (
       <div className="item" key={order.id}>
         <div className="ui small image">
-          <img src={order.thumbnail} />
+          <img src={order.thumbnail} alt={order.name} />
         </div>
         <div className="content">
           <div className="header">{order.name}</div>

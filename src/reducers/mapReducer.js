@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { PICK_DESTINATION } from '../actions/types';
 
 export default (state = {}, action) => {

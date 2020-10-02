@@ -30,7 +30,7 @@ const Map = (props) => {
     map.addControl(geocoder);
     geocoder.on('result', (e) => props.pickDestination(e));
     geocoder.on('clear', () => props.pickDestination({ result: {} }));
-  }, []);
+  }, [props, mapContainer]);
   return <div ref={mapContainer} className="mapContainer"></div>;
 };
 

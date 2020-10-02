@@ -8,26 +8,6 @@ const {
   PICK_DESTINATION,
 } = require('./types');
 
-// export const addToCart = (order) => (dispatch, getState) => {
-//   const existingOrder = getState().orders[order.id];
-//   let payload = {};
-//   if (existingOrder) {
-//     // console.log(order);
-//     // console.log(order['quantity']);
-//     // order.quantity++;
-//     order['quantity'] = existingOrder.quantity + 1;
-//     console.log('existing');
-//   } else {
-//     order['quantity'] = 1;
-//     console.log('nonexisting');
-//   }
-
-//   dispatch({
-//     type: ADD_TO_CART,
-//     payload: order,
-//   });
-// };
-
 export const addToCart = (order) => {
   return {
     type: ADD_TO_CART,
@@ -43,7 +23,7 @@ export const removeToCart = (order) => {
 };
 
 export const fetchMenus = () => async (dispatch) => {
-  const response = await foodeliver.get('/menus');
+  const response = await foodeliver.get('/');
   dispatch({ type: FETCH_MENUS, payload: response.data });
 };
 

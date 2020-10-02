@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
 const MenuList = (props) => {
   useEffect(() => {
     props.fetchMenus();
-  }, [props]);
+  }, []);
 
   const onAddToCart = (menu) => {
     props.addToCart(menu);

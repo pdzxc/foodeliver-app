@@ -8,9 +8,9 @@ import MenuList from './MenuList';
 import ViewCart from './ViewCart';
 import Checkout from './Checkout';
 import ManageOrders from './ManageOrders';
+import TrackOrder from './TrackOrder';
 
 import history from '../history';
-import TrackOrder from './TrackOrder';
 
 const App = () => {
   return (
@@ -20,8 +20,8 @@ const App = () => {
         <Route path="/" exact component={MenuList} />
         <Route path="/cart" exact component={ViewCart} />
         <Route path="/checkout" exact component={Checkout} />
-        <Route path="/track-order/:id" exact component={TrackOrder} />
         <Route path="/manage-orders" exact component={ManageOrders} />
+        <Route path="/track-order/:id" exact component={TrackOrder} />
       </Switch>
       <Footer />
     </Router>

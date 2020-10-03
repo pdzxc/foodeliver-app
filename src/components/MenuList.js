@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import '../assets/css/menu.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchMenus, addToCart } from '../actions';

@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { ADD_TO_CART, REMOVE_TO_CART } from '../actions/types';
+import {
+  ADD_TO_CART,
+  REMOVE_TO_CART,
+  TRANSACTION_COMPLETED,
+} from '../actions/types';
 
 export default (state = {}, action) => {
   switch (action.type) {
@@ -21,6 +25,8 @@ export default (state = {}, action) => {
         action.payload.quantity--;
         return { ...state, [action.payload.id]: action.payload };
       }
+    case TRANSACTION_COMPLETED:
+      return {};
     default:
       return state;
   }

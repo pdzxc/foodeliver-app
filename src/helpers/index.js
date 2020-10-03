@@ -1,23 +1,23 @@
 export const formatNumber = (nStr) => {
-  nStr += '';
-  // var x = nStr.split('.'); // [10] [100] [32]
-  // var decimals = x[x.length - 1].length < 0 ? '00' : x[x.length - 1].substring(1,2);
-  // var x1 = x[0]; // 100
-  // var x2 = x.length > 1 ? '.' + x[1] : ''; // > 1 .32
-  // var rgx = /(\d+)(\d{3})/;
-  // while (rgx.test(x1)) {
-  //   x1 = x1.replace(rgx, `${1},${2}`);
-  // }
-  // return x1 + x2;
-  // if (x.length > 1) {
-  //   // let decimals = x[x.length - 1];
-  //   // console.log(decimals);
-  //   // if (decimals) {
-  //   //   decimals =
-  //   //     x[x.length - 1].length < 0 ? '00' : x[x.length - 1].substring(1, 2);
-  //   //   return parseFloat(nStr).toLocaleString('en') + '.' + decimals;
-  //   // }
-  // } else {
-  return parseFloat(nStr).toLocaleString('en') + '.00';
-  // }
+  let p = parseFloat(nStr).toLocaleString('en');
+  let x = p.split('.');
+  let f = '';
+  if (x.length > 1) {
+    f = x[0] + '.' + x[1].substr(0, 2);
+  } else {
+    f = parseFloat(nStr).toLocaleString('en') + '.00';
+  }
+  return f;
+};
+
+export const secondsToHms = (d) => {
+  d = Number(d);
+  var h = Math.floor(d / 3600);
+  var m = Math.floor((d % 3600) / 60);
+  var s = Math.floor((d % 3600) % 60);
+
+  var hDisplay = h > 0 ? h + (h === 1 ? ' hour, ' : ' hours, ') : '';
+  var mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes, ') : '';
+  var sDisplay = s > 0 ? s + (s === 1 ? ' second' : ' seconds') : '';
+  return hDisplay + mDisplay + sDisplay;
 };

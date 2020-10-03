@@ -1,10 +1,14 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Map from './Map';
+import { v4 as uuidv4 } from 'uuid';
+
 import history from '../history';
 import { formatNumber } from '../helpers';
+import { transactionCompleted } from '../actions';
+
 import Message from './Message';
+import Map from './Map';
 
 const Checkout = (props) => {
   const [hasError, setHasError] = useState(false);
@@ -13,12 +17,14 @@ const Checkout = (props) => {
       history.push('/');
     }
   }, [props.orders]);
+
   const totalAmount = () => {
     const total = _.sumBy(props.orders, (o) => {
       return o.quantity * o.price;
     });
     return formatNumber(total);
   };
+
   const showError = () => {
     if (hasError) {
       return (
@@ -29,13 +35,17 @@ const Checkout = (props) => {
       );
     }
   };
+
   const onPlaceOrder = () => {
     if (_.isEmpty(props.destination)) {
       setHasError(true);
       return;
     }
-    history.push('/track-order');
+    const transactionId = uuidv4();
+    props.transactionCompleted(transactionId, props.orders);
+    history.push(`/track-order/${transactionId}`);
   };
+
   const renderOrders = props.orders.map((order) => {
     return (
       <div className="item" key={order.id}>
@@ -61,24 +71,30 @@ const Checkout = (props) => {
     <div className="ui container">
       <div className="ui stackable grid">
         <div className="eight wide column">
-          <Map />
+          <Map
+            lat="121.04682017220466"
+            lng="14.569330253822642"
+            hasGeocoder="true"
+          />
         </div>
         <div className="eight wide column">
-          <div className="ui divided items">
-            {renderOrders}
-            <div className="item">
-              <div className="content">
-                <h2 className="ui header">
-                  &#8369; {totalAmount()}
-                  <div className="sub header">Total</div>
-                </h2>
+          <div className="ui segment">
+            <div className="ui divided items">
+              {renderOrders}
+              <div className="item">
+                <div className="content">
+                  <h2 className="ui red header">
+                    &#8369; {totalAmount()}
+                    <div className="sub header">Total</div>
+                  </h2>
+                </div>
               </div>
             </div>
+            <button className="ui red button" onClick={onPlaceOrder}>
+              Place your order
+            </button>
+            {showError()}
           </div>
-          <button className="ui olive button" onClick={onPlaceOrder}>
-            Place your order
-          </button>
-          {showError()}
         </div>
       </div>
     </div>
@@ -88,8 +104,8 @@ const Checkout = (props) => {
 const mapStateToProps = (state) => {
   return {
     orders: Object.values(state.orders),
-    destination: state.destination,
+    destination: state.map,
   };
 };
 
-export default connect(mapStateToProps)(Checkout);
+export default connect(mapStateToProps, { transactionCompleted })(Checkout);

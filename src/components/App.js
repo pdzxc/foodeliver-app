@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/" exact component={MenuList} />
         <Route path="/cart" exact component={ViewCart} />
         <Route path="/checkout" exact component={Checkout} />
-        <Route path="/track-order" exact component={TrackOrder} />
+        <Route path="/track-order/:id" exact component={TrackOrder} />
       </Switch>
       <Footer />
     </Router>

@@ -1,12 +1,15 @@
 import foodeliver from '../apis/foodeliver';
+import mapbox from '../apis/mapbox';
 
-const {
+import {
   ADD_TO_CART,
   REMOVE_TO_CART,
   FETCH_MENUS,
-  FETCH_MENU,
   PICK_DESTINATION,
-} = require('./types');
+  TRANSACTION_COMPLETED,
+  FETCH_TRANSACTION,
+  GET_ROUTE,
+} from './types';
 
 export const addToCart = (order) => {
   return {
@@ -21,19 +24,9 @@ export const removeToCart = (order) => {
     payload: order,
   };
 };
-
 export const fetchMenus = () => async (dispatch) => {
-  const response = await foodeliver.get('/');
+  const response = await foodeliver.get('/menus');
   dispatch({ type: FETCH_MENUS, payload: response.data });
-};
-
-export const fetchMenu = (id) => async (dispatch) => {
-  const response = await foodeliver.get(`/menus/${id}`);
-  dispatch({ type: FETCH_MENU, payload: response.data });
-};
-
-export const fetchOrderHistory = (userId) => {
-  // const response = await
 };
 
 export const pickDestination = (destination) => {
@@ -41,4 +34,47 @@ export const pickDestination = (destination) => {
     type: PICK_DESTINATION,
     payload: destination.result,
   };
+};
+
+export const transactionCompleted = (id, orders) => async (
+  dispatch,
+  getState
+) => {
+  const { coordinates } = getState().map.geometry;
+  const payload = {
+    id,
+    items: Object.values(orders),
+    status: 'preparing',
+    destination: {
+      lat: coordinates[0],
+      lng: coordinates[1],
+    },
+    dateOrdered: new Date(),
+  };
+  const response = await foodeliver.post('/transactions', payload);
+  dispatch({
+    type: TRANSACTION_COMPLETED,
+    payload: response.data,
+  });
+};
+
+export const fetchTransaction = (id) => async (dispatch) => {
+  const response = await foodeliver.get(`/transactions/${id}`);
+  const { lat, lng } = response.data.destination;
+  await dispatch(getOrderETA(lat, lng));
+  dispatch({
+    type: FETCH_TRANSACTION,
+    payload: response.data,
+  });
+};
+
+export const getOrderETA = (lat, lng) => async (dispatch) => {
+  const [storeLat, storeLng] = ['121.04682017220466', '14.569330253822642'];
+  const response = await mapbox.get(
+    `/directions/v5/mapbox/driving-traffic/${storeLat},${storeLng};${lat},${lng}`
+  );
+  dispatch({
+    type: GET_ROUTE,
+    payload: response.data,
+  });
 };

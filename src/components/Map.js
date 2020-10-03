@@ -14,24 +14,31 @@ const Map = (props) => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-      center: [121.04682017220466, 14.569330253822642], // starting position [lng, lat]
+      center: [props.lat, props.lng], // starting position [lng, lat]
       zoom: 13, // starting zoom
       interactive: false,
     });
 
-    // map.on('style.load', function () {
-    //   // Possible position values are 'bottom-left', 'bottom-right', 'top-left', 'top-right'
-    //   map.addControl(new mapboxgl.Minimap(), 'top-right');
-    // });
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
-    map.addControl(geocoder);
-    geocoder.on('result', (e) => props.pickDestination(e));
-    geocoder.on('clear', () => props.pickDestination({ result: {} }));
+    if (props.hasMarker === 'true') {
+      new mapboxgl.Marker().setLngLat([props.lat, props.lng]).addTo(map);
+    }
+
+    if (props.hasGeocoder === 'true') {
+      const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+      });
+      map.addControl(geocoder);
+      geocoder.on('result', (e) => props.pickDestination(e));
+      geocoder.on('clear', () => props.pickDestination({ result: {} }));
+    }
   }, [props, mapContainer]);
   return <div ref={mapContainer} className="mapContainer"></div>;
+};
+
+Map.defaultProps = {
+  hasMarker: 'false',
+  hasGeocoder: 'false',
 };
 
 export default connect(null, { pickDestination })(Map);

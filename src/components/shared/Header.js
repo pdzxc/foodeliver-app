@@ -1,17 +1,22 @@
 import _ from 'lodash';
-import '../assets/css/header.css';
-import Logo from '../assets/images/foodeliver.png';
+import '../../assets/css/header.css';
+import Logo from '../../assets/images/foodeliver.png';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import history from '../history';
+import history from '../../history';
 
 const Header = (props) => {
   const [hasViewCart, setViewCart] = useState(true);
 
   useEffect(() => {
     history.listen((location) => {
-      setViewCart(location.pathname === '/checkout' ? false : true);
+      setViewCart(
+        location.pathname === '/checkout' ||
+          location.pathname === '/manage-order'
+          ? false
+          : true
+      );
     });
   }, []);
   const getTotalItems = () => {

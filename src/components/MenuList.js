@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchMenus, addToCart } from '../actions';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './shared/LoadingSpinner';
 
 class MenuList extends React.Component {
   componentDidMount() {

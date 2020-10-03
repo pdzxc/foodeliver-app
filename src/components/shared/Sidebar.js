@@ -1,4 +1,4 @@
-import '../assets/css/sidebar.css';
+import '../../assets/css/sidebar.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 

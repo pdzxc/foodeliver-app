@@ -1,10 +1,10 @@
-import '../assets/css/map.css';
+import '../../assets/css/map.css';
 import React, { createRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { pickDestination } from '../actions';
+import { pickDestination } from '../../actions';
 
 const Map = (props) => {
   const mapContainer = createRef();

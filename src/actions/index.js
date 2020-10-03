@@ -1,5 +1,7 @@
 import foodeliver from '../apis/foodeliver';
 import mapbox from '../apis/mapbox';
+import { v4 as uuidv4 } from 'uuid';
+import history from '../history';
 
 import {
   ADD_TO_CART,
@@ -8,6 +10,8 @@ import {
   PICK_DESTINATION,
   TRANSACTION_COMPLETED,
   FETCH_TRANSACTION,
+  FETCH_TRANSACTIONS,
+  UPDATE_TRANSACTION,
   GET_ROUTE,
 } from './types';
 
@@ -36,13 +40,11 @@ export const pickDestination = (destination) => {
   };
 };
 
-export const transactionCompleted = (id, orders) => async (
-  dispatch,
-  getState
-) => {
+export const transactionCompleted = (orders) => async (dispatch, getState) => {
+  const id = uuidv4();
   const { coordinates } = getState().map.geometry;
   const payload = {
-    id,
+    id: id,
     items: Object.values(orders),
     status: 'preparing',
     destination: {
@@ -56,14 +58,37 @@ export const transactionCompleted = (id, orders) => async (
     type: TRANSACTION_COMPLETED,
     payload: response.data,
   });
+  history.push(`/track-order/${id}`);
+};
+
+export const fetchTransactionAndGeo = (id) => async (dispatch, getState) => {
+  await dispatch(fetchTransaction(id));
+  const { lat, lng } = getState().transactions[id].destination;
+  dispatch(getOrderETA(lat, lng));
+};
+
+export const fetchTransactions = () => async (dispatch) => {
+  const response = await foodeliver.get('/transactions');
+  dispatch({
+    type: FETCH_TRANSACTIONS,
+    payload: response.data,
+  });
 };
 
 export const fetchTransaction = (id) => async (dispatch) => {
   const response = await foodeliver.get(`/transactions/${id}`);
-  const { lat, lng } = response.data.destination;
-  await dispatch(getOrderETA(lat, lng));
   dispatch({
     type: FETCH_TRANSACTION,
+    payload: response.data,
+  });
+};
+
+export const updateTransactionStatus = (id, status) => async (dispatch) => {
+  const response = await foodeliver.patch(`/transactions/${id}`, {
+    status,
+  });
+  dispatch({
+    type: UPDATE_TRANSACTION,
     payload: response.data,
   });
 };

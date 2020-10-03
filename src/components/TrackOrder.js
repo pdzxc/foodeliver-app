@@ -1,14 +1,14 @@
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchTransaction } from '../actions';
+import { fetchTransactionAndGeo } from '../actions';
 import { formatNumber, secondsToHms } from '../helpers';
-import Map from './Map';
-import LoadingSpinner from './LoadingSpinner';
+import Map from './shared/Map';
+import LoadingSpinner from './shared/LoadingSpinner';
 
 const TrackOrder = (props) => {
   useEffect(() => {
-    props.fetchTransaction(props.match.params.id);
+    props.fetchTransactionAndGeo(props.match.params.id);
     // eslint-disable-next-line
   }, []);
 
@@ -22,7 +22,7 @@ const TrackOrder = (props) => {
   };
 
   const renderMap = () => {
-    if (!props.map || !props.transaction) {
+    if (!props.map || !props.transaction || !props.map.routes) {
       return <LoadingSpinner />;
     } else {
       return (
@@ -68,32 +68,32 @@ const TrackOrder = (props) => {
     if (props.transaction) {
       const { status } = props.transaction;
       let preparingClass = '';
-      let otwClass = 'disabled';
-      let deliveredClass = 'disabled';
+      let otwClass = 'disabled ';
+      let deliveredClass = 'disabled ';
       if (status === 'delivered') {
         otwClass = '';
+        deliveredClass = 'active ';
       } else if (status === 'on-the-way') {
-        otwClass = 'active';
-      } else if (status === 'delivered') {
-        otwClass = '';
-        deliveredClass = 'active';
+        otwClass = 'active ';
+      } else if (status === 'preparing') {
+        preparingClass = 'active ';
       }
 
       return (
-        <div className="ui top attached steps">
-          <div className={`${preparingClass} step`}>
+        <div className="ui top three attached steps">
+          <div className={`${preparingClass}step`}>
             <i className="box icon"></i>
             <div className="content">
               <div className="title">Preparing</div>
             </div>
           </div>
-          <div className={`${otwClass} step`}>
+          <div className={`${otwClass}step`}>
             <i className="shipping fast icon"></i>
             <div className="content">
               <div className="title">On The Way</div>
             </div>
           </div>
-          <div className={`${deliveredClass} step`}>
+          <div className={`${deliveredClass}step`}>
             <i className="check icon"></i>
             <div className="content">
               <div className="title">Delivered</div>
@@ -106,6 +106,7 @@ const TrackOrder = (props) => {
 
   return (
     <div className="ui container">
+      <h1 className="ui header">Track Your Order</h1>
       {getDeliveryStatus()}
       <div className="ui attached segment" style={{ padding: '20px 0' }}>
         <h2
@@ -125,8 +126,8 @@ const TrackOrder = (props) => {
         >
           {renderItems()}
         </div>
-        <div class="ui section divider"></div>
-        <h2 className="center huge aligned ui header red">
+        <div className="ui section divider"></div>
+        <h2 className="center aligned ui header red">
           &#8369; {totalAmount()}
           <div className="sub header">Total</div>
         </h2>
@@ -143,4 +144,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchTransaction })(TrackOrder);
+export default connect(mapStateToProps, { fetchTransactionAndGeo })(TrackOrder);

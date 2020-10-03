@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addToCart, removeToCart } from '../actions';
-import Sidebar from './Sidebar';
+import Sidebar from './shared/Sidebar';
 import history from '../history';
 import { formatNumber } from '../helpers';
 

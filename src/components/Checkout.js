@@ -1,14 +1,13 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
 
 import history from '../history';
 import { formatNumber } from '../helpers';
 import { transactionCompleted } from '../actions';
 
-import Message from './Message';
-import Map from './Map';
+import Message from './shared/Message';
+import Map from './shared/Map';
 
 const Checkout = (props) => {
   const [hasError, setHasError] = useState(false);
@@ -16,7 +15,8 @@ const Checkout = (props) => {
     if (_.isEmpty(props.orders)) {
       history.push('/');
     }
-  }, [props.orders]);
+    // eslint-disable-next-line
+  }, []);
 
   const totalAmount = () => {
     const total = _.sumBy(props.orders, (o) => {
@@ -41,9 +41,7 @@ const Checkout = (props) => {
       setHasError(true);
       return;
     }
-    const transactionId = uuidv4();
-    props.transactionCompleted(transactionId, props.orders);
-    history.push(`/track-order/${transactionId}`);
+    props.transactionCompleted(props.orders);
   };
 
   const renderOrders = props.orders.map((order) => {
@@ -69,6 +67,7 @@ const Checkout = (props) => {
   });
   return (
     <div className="ui container">
+      <h1 className="ui header">Select Your Address</h1>
       <div className="ui stackable grid">
         <div className="eight wide column">
           <Map

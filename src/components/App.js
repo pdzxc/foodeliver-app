@@ -21,7 +21,7 @@ const App = () => {
         <Route path="/cart" exact component={ViewCart} />
         <Route path="/checkout" exact component={Checkout} />
         <Route path="/track-order/:id" exact component={TrackOrder} />
-        <Route path="/manage/manage-orders" exact component={ManageOrders} />
+        <Route path="/manage-orders" exact component={ManageOrders} />
       </Switch>
       <Footer />
     </Router>

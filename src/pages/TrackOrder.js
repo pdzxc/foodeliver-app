@@ -25,7 +25,6 @@ const TrackOrder = (props) => {
   };
 
   const renderMap = () => {
-    console.log(props);
     if (!props.map || !props.transaction || !props.map.routes) {
       return <Loading />;
     } else {

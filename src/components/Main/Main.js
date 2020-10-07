@@ -1,3 +1,4 @@
+import './style.scss';
 import React, { useContext } from 'react';
 import { BodyContext } from '../Body/Body';
 

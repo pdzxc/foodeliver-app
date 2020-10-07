@@ -9,7 +9,10 @@ const CartItem = ({ order, removeToCart, addToCart }) => {
 
         <div className="description">{order.description}</div>
       </div>
-      <div className="extra content">
+      <div
+        className="extra content"
+        style={{ textAlign: 'right', alignItems: 'flex-end' }}
+      >
         <div className="meta">
           <span className="price">
             &#8369; {formatNumber(order.quantity * order.price)}

@@ -94,7 +94,7 @@ export const pickDestination = (destination, type) => async (dispatch) => {
           `/directions/v5/mapbox/driving-traffic/${storeLat},${storeLng};${lat},${lng}`
         )
         .then((response) => {
-          if (response.data === 'NoRoute') {
+          if (response.data === 'NoRoute' || response.data.code === 'NoRoute') {
             throw Error();
           } else {
             if (type === 'VALID') {

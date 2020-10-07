@@ -1,4 +1,4 @@
-import '../../assets/css/map.css';
+import './style.scss';
 import React, { createRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import mapboxgl from 'mapbox-gl';
@@ -29,8 +29,18 @@ const Map = (props) => {
         mapboxgl: mapboxgl,
       });
       map.addControl(geocoder);
-      geocoder.on('result', (e) => props.pickDestination(e));
-      geocoder.on('clear', () => props.pickDestination({ result: {} }));
+      geocoder.on('result', (e) => {
+        props.pickDestination(e.result, 'VALID');
+      });
+      geocoder.on('clear', () => {
+        props.pickDestination(
+          {
+            message:
+              'Please select a valid destination. Delivery is only available within Metro Manila, Philippines',
+          },
+          'INVALID'
+        );
+      });
     }
   }, [props, mapContainer]);
   return <div ref={mapContainer} className="mapContainer"></div>;

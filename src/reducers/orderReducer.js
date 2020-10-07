@@ -5,7 +5,9 @@ import {
   TRANSACTION_COMPLETED,
 } from '../actions/types';
 
-export default (state = {}, action) => {
+const initialState = {};
+
+export default (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART:
       let existingOrder = _.find(state, (o) => {
@@ -26,7 +28,7 @@ export default (state = {}, action) => {
         return { ...state, [action.payload.id]: action.payload };
       }
     case TRANSACTION_COMPLETED:
-      return {};
+      return initialState;
     default:
       return state;
   }

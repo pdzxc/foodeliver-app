@@ -1,10 +1,13 @@
-import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchTransactionAndGeo } from '../actions';
-import { formatNumber, secondsToHms } from '../helpers';
-import Map from './shared/Map';
-import LoadingSpinner from './shared/LoadingSpinner';
+import { formatNumber, secondsToHms, sumBy } from '../utils';
+import Main from '../components/Main/Main';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import Map from '../containers/Map/Map';
+import Loading from '../components/Loading/Loading';
+import { BodyProvider } from '../components/Body/Body';
 
 const TrackOrder = (props) => {
   useEffect(() => {
@@ -14,7 +17,7 @@ const TrackOrder = (props) => {
 
   const totalAmount = () => {
     if (props.transaction) {
-      const total = _.sumBy(props.transaction.items, (o) => {
+      const total = sumBy(props.transaction.items, (o) => {
         return o.quantity * o.price;
       });
       return formatNumber(total);
@@ -22,13 +25,14 @@ const TrackOrder = (props) => {
   };
 
   const renderMap = () => {
+    console.log(props);
     if (!props.map || !props.transaction || !props.map.routes) {
-      return <LoadingSpinner />;
+      return <Loading />;
     } else {
       return (
         <Map
-          lat={props.transaction.destination.lat}
-          lng={props.transaction.destination.lng}
+          lat={props.transaction.destination.geometry.coordinates[0]}
+          lng={props.transaction.destination.geometry.coordinates[1]}
           hasMarker="true"
         />
       );
@@ -105,35 +109,41 @@ const TrackOrder = (props) => {
   };
 
   return (
-    <div className="ui container">
-      <h1 className="ui header">Track Your Order</h1>
-      {getDeliveryStatus()}
-      <div className="ui attached segment" style={{ padding: '20px 0' }}>
-        <h2
-          className="ui icon header center aligned"
-          style={{ margin: '50px 0' }}
-        >
-          <i className="clock outline icon"></i>
-          <div className="content">
-            {renderCountdown()}
-            <div className="sub header">Estimated Time of Arrival</div>
-          </div>
-        </h2>
+    <BodyProvider>
+      <Main>
+        <Header />
+        <div className="ui container">
+          <h1 className="ui header">Track Your Order</h1>
+          {getDeliveryStatus()}
+          <div className="ui attached segment" style={{ padding: '20px 0' }}>
+            <h2
+              className="ui icon header center aligned"
+              style={{ margin: '50px 0' }}
+            >
+              <i className="clock outline icon"></i>
+              <div className="content">
+                {renderCountdown()}
+                <div className="sub header">Estimated Time of Arrival</div>
+              </div>
+            </h2>
 
-        <div
-          className="ui divided items"
-          style={{ maxWidth: '80%', margin: 'auto' }}
-        >
-          {renderItems()}
+            <div
+              className="ui divided items"
+              style={{ maxWidth: '80%', margin: 'auto' }}
+            >
+              {renderItems()}
+            </div>
+            <div className="ui section divider"></div>
+            <h2 className="center aligned ui header red">
+              &#8369; {totalAmount()}
+              <div className="sub header">Total</div>
+            </h2>
+          </div>
+          {renderMap()}
         </div>
-        <div className="ui section divider"></div>
-        <h2 className="center aligned ui header red">
-          &#8369; {totalAmount()}
-          <div className="sub header">Total</div>
-        </h2>
-      </div>
-      {renderMap()}
-    </div>
+        <Footer />
+      </Main>
+    </BodyProvider>
   );
 };
 

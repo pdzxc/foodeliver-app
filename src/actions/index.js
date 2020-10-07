@@ -7,7 +7,6 @@ import {
   ADD_TO_CART,
   REMOVE_TO_CART,
   FETCH_MENUS,
-  PICK_DESTINATION,
   TRANSACTION_COMPLETED,
   FETCH_TRANSACTION,
   FETCH_TRANSACTIONS,
@@ -33,24 +32,13 @@ export const fetchMenus = () => async (dispatch) => {
   dispatch({ type: FETCH_MENUS, payload: response.data });
 };
 
-export const pickDestination = (destination) => {
-  return {
-    type: PICK_DESTINATION,
-    payload: destination.result,
-  };
-};
-
 export const transactionCompleted = (orders) => async (dispatch, getState) => {
   const id = uuidv4();
-  const { coordinates } = getState().map.geometry;
   const payload = {
     id: id,
     items: Object.values(orders),
     status: 'preparing',
-    destination: {
-      lat: coordinates[0],
-      lng: coordinates[1],
-    },
+    destination: getState().map,
     dateOrdered: new Date(),
   };
   const response = await foodeliver.post('/transactions', payload);
@@ -63,8 +51,8 @@ export const transactionCompleted = (orders) => async (dispatch, getState) => {
 
 export const fetchTransactionAndGeo = (id) => async (dispatch, getState) => {
   await dispatch(fetchTransaction(id));
-  const { lat, lng } = getState().transactions[id].destination;
-  dispatch(getOrderETA(lat, lng));
+  // const { lat, lng } = getState().transactions[id].destination;
+  dispatch(pickDestination(getState().transactions[id].destination, 'FETCH'));
 };
 
 export const fetchTransactions = () => async (dispatch) => {
@@ -93,13 +81,50 @@ export const updateTransactionStatus = (id, status) => async (dispatch) => {
   });
 };
 
-export const getOrderETA = (lat, lng) => async (dispatch) => {
-  const [storeLat, storeLng] = ['121.04682017220466', '14.569330253822642'];
-  const response = await mapbox.get(
-    `/directions/v5/mapbox/driving-traffic/${storeLat},${storeLng};${lat},${lng}`
-  );
-  dispatch({
-    type: GET_ROUTE,
-    payload: response.data,
-  });
+// MAP
+
+export const pickDestination = (destination, type) => async (dispatch) => {
+  switch (type) {
+    case 'VALID':
+    case 'FETCH':
+      const [storeLat, storeLng] = ['121.04682017220466', '14.569330253822642'];
+      const [lat, lng] = destination.geometry.coordinates;
+      await mapbox
+        .get(
+          `/directions/v5/mapbox/driving-traffic/${storeLat},${storeLng};${lat},${lng}`
+        )
+        .then((response) => {
+          if (response.data === 'NoRoute') {
+            throw Error();
+          } else {
+            if (type === 'VALID') {
+              dispatch({
+                type: GET_ROUTE,
+                payload: destination,
+              });
+            } else {
+              dispatch({
+                type: GET_ROUTE,
+                payload: response.data,
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          dispatch({
+            type: GET_ROUTE,
+            payload: {
+              message: 'No available route on selected destination.',
+            },
+          });
+        });
+      break;
+    case 'INVALID':
+      dispatch({
+        type: GET_ROUTE,
+        payload: destination,
+      });
+      break;
+    default:
+  }
 };

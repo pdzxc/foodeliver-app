@@ -1,15 +1,13 @@
 import React from 'react';
 
-const LoadingSpinner = (props) => {
+export default function Loading(props) {
   return (
     <div className="ui active dimmer" style={{ position: 'fixed' }}>
       <div className="ui big text loader">{props.message}</div>
     </div>
   );
-};
+}
 
-LoadingSpinner.defaultProps = {
+Loading.defaultProps = {
   message: 'Loading...',
 };
-
-export default LoadingSpinner;

@@ -2,8 +2,13 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchTransactions, updateTransactionStatus } from '../actions';
+import Main from '../components/Main/Main';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import Map from '../containers/Map/Map';
+import { BodyProvider } from '../components/Body/Body';
 
-const ManageOrder = (props) => {
+const ManageOrders = (props) => {
   useEffect(() => {
     props.fetchTransactions();
     // eslint-disable-next-line
@@ -54,20 +59,26 @@ const ManageOrder = (props) => {
   };
 
   return (
-    <div className="ui container">
-      <h1 className="ui header">Manage Orders</h1>
-      <table className="ui striped table">
-        <thead>
-          <tr>
-            <th>Transaction ID</th>
-            <th>Date Ordered</th>
-            <th>Link</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{renderList()}</tbody>
-      </table>
-    </div>
+    <BodyProvider>
+      <Main>
+        <Header />
+        <div className="ui container">
+          <h1 className="ui header">Manage Orders</h1>
+          <table className="ui striped table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Date Ordered</th>
+                <th>Link</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{renderList()}</tbody>
+          </table>
+        </div>
+        <Footer />
+      </Main>
+    </BodyProvider>
   );
 };
 
@@ -78,4 +89,4 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   fetchTransactions,
   updateTransactionStatus,
-})(ManageOrder);
+})(ManageOrders);

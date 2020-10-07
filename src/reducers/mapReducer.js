@@ -1,16 +1,13 @@
-import {
-  PICK_DESTINATION,
-  TRANSACTION_COMPLETED,
-  GET_ROUTE,
-} from '../actions/types';
+import { TRANSACTION_COMPLETED, GET_ROUTE } from '../actions/types';
 
-export default (state = {}, action) => {
+const initialState = {};
+
+export default (state = initialState, action) => {
   switch (action.type) {
-    case PICK_DESTINATION:
     case GET_ROUTE:
       return action.payload;
     case TRANSACTION_COMPLETED:
-      return {};
+      return initialState;
     default:
       return state;
   }

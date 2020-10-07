@@ -27,7 +27,7 @@ const ManageOrders = (props) => {
             <div className="ui buttons">
               <button
                 onClick={() => props.updateTransactionStatus(t.id, 'preparing')}
-                className={`ui red button ${
+                className={`ui inverted red button ${
                   t.status === 'preparing' ? 'active' : ''
                 }`}
               >
@@ -37,7 +37,7 @@ const ManageOrders = (props) => {
                 onClick={() =>
                   props.updateTransactionStatus(t.id, 'on-the-way')
                 }
-                className={`ui blue button ${
+                className={`ui inverted blue button ${
                   t.status === 'on-the-way' ? 'active' : ''
                 }`}
               >
@@ -45,7 +45,7 @@ const ManageOrders = (props) => {
               </button>
               <button
                 onClick={() => props.updateTransactionStatus(t.id, 'delivered')}
-                className={`ui green button ${
+                className={`ui inverted green button ${
                   t.status === 'delivered' ? 'active' : ''
                 }`}
               >

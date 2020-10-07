@@ -24,10 +24,7 @@ const ViewCartButton = (props) => {
       >
         <i className="icon shopping cart"></i>
         View Cart
-        {useMemo(() => {
-          renderFloat();
-          // eslint-disable-next-line
-        }, [props.orders])}
+        {renderFloat()}
       </button>
     </div>
   );
